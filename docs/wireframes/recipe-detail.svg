@@ -1,0 +1,175 @@
+<svg width="1200" height="1200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="1200" fill="#f8f9fa" stroke="#e9ecef" stroke-width="2"/>
+
+  <!-- Header -->
+  <rect x="20" y="20" width="1160" height="80" fill="#ffffff" stroke="#dee2e6" stroke-width="1"/>
+  <text x="40" y="50" font-family="Arial" font-size="18" font-weight="bold" fill="#333">오늘 뭐 먹지?</text>
+  <text x="1020" y="50" font-family="Arial" font-size="14" fill="#333">김민지님</text>
+  <rect x="1100" y="35" width="60" height="30" fill="#dc3545" stroke="#c82333" stroke-width="1" rx="4"/>
+  <text x="1130" y="55" font-family="Arial" font-size="12" fill="#ffffff" text-anchor="middle">로그아웃</text>
+
+  <!-- Navigation -->
+  <rect x="20" y="120" width="1160" height="50" fill="#ffffff" stroke="#dee2e6" stroke-width="1"/>
+  <text x="80" y="150" font-family="Arial" font-size="12" fill="#333">홈</text>
+  <text x="160" y="150" font-family="Arial" font-size="12" fill="#333">냉장고 관리</text>
+  <rect x="240" y="135" width="100" height="20" fill="#007bff" stroke="#0056b3" stroke-width="1" rx="2"/>
+  <text x="290" y="150" font-family="Arial" font-size="12" fill="#ffffff" text-anchor="middle">레시피 검색</text>
+  <text x="380" y="150" font-family="Arial" font-size="12" fill="#333">커뮤니티</text>
+  <text x="480" y="150" font-family="Arial" font-size="12" fill="#333">마이페이지</text>
+
+  <!-- Recipe Header -->
+  <rect x="20" y="190" width="1160" height="300" fill="#ffffff" stroke="#dee2e6" stroke-width="1" rx="8"/>
+
+  <!-- Recipe Image -->
+  <rect x="40" y="210" width="400" height="260" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="8"/>
+  <text x="240" y="345" font-family="Arial" font-size="16" fill="#6c757d" text-anchor="middle">[레시피 대표 이미지]</text>
+
+  <!-- Recipe Info -->
+  <text x="470" y="240" font-family="Arial" font-size="28" font-weight="bold" fill="#333">김치볶음밥</text>
+  <text x="470" y="270" font-family="Arial" font-size="16" fill="#6c757d">간단하고 맛있는 김치볶음밥 레시피입니다.</text>
+
+  <!-- Rating -->
+  <text x="470" y="300" font-family="Arial" font-size="14" fill="#333">평점: ⭐⭐⭐⭐⭐ 4.8 (324개 리뷰)</text>
+
+  <!-- Recipe Stats -->
+  <rect x="470" y="320" width="120" height="60" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="4"/>
+  <text x="530" y="340" font-family="Arial" font-size="12" fill="#6c757d" text-anchor="middle">조리시간</text>
+  <text x="530" y="360" font-family="Arial" font-size="18" font-weight="bold" fill="#333" text-anchor="middle">15분</text>
+
+  <rect x="610" y="320" width="120" height="60" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="4"/>
+  <text x="670" y="340" font-family="Arial" font-size="12" fill="#6c757d" text-anchor="middle">난이도</text>
+  <text x="670" y="360" font-family="Arial" font-size="18" font-weight="bold" fill="#333" text-anchor="middle">쉬움</text>
+
+  <rect x="750" y="320" width="120" height="60" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="4"/>
+  <text x="810" y="340" font-family="Arial" font-size="12" fill="#6c757d" text-anchor="middle">인분</text>
+  <text x="810" y="360" font-family="Arial" font-size="18" font-weight="bold" fill="#333" text-anchor="middle">2인분</text>
+
+  <!-- Action Buttons -->
+  <rect x="920" y="210" width="100" height="35" fill="#dc3545" stroke="#c82333" stroke-width="1" rx="4"/>
+  <text x="970" y="232" font-family="Arial" font-size="12" fill="#ffffff" text-anchor="middle">♥ 북마크</text>
+
+  <rect x="920" y="255" width="100" height="35" fill="#28a745" stroke="#1e7e34" stroke-width="1" rx="4"/>
+  <text x="970" y="277" font-family="Arial" font-size="12" fill="#ffffff" text-anchor="middle">📤 공유하기</text>
+
+  <rect x="1040" y="210" width="120" height="35" fill="#007bff" stroke="#0056b3" stroke-width="1" rx="4"/>
+  <text x="1100" y="232" font-family="Arial" font-size="12" fill="#ffffff" text-anchor="middle">🛒 재료 구매</text>
+
+  <!-- Ingredients Section -->
+  <text x="40" y="530" font-family="Arial" font-size="20" font-weight="bold" fill="#333">재료 (2인분 기준)</text>
+
+  <rect x="40" y="550" width="560" height="200" fill="#ffffff" stroke="#dee2e6" stroke-width="1" rx="8"/>
+
+  <!-- Main Ingredients -->
+  <text x="60" y="580" font-family="Arial" font-size="16" font-weight="bold" fill="#333">주재료</text>
+
+  <rect x="60" y="595" width="520" height="30" fill="#f8f9fa"/>
+  <text x="80" y="615" font-family="Arial" font-size="14" fill="#333">김치</text>
+  <text x="200" y="615" font-family="Arial" font-size="14" fill="#333">1컵 (150g)</text>
+  <rect x="450" y="600" width="20" height="20" fill="#28a745" rx="2"/>
+  <text x="460" y="615" font-family="Arial" font-size="12" fill="#ffffff" text-anchor="middle">✓</text>
+  <text x="480" y="615" font-family="Arial" font-size="12" fill="#28a745">보유</text>
+
+  <rect x="60" y="625" width="520" height="30" fill="#ffffff"/>
+  <text x="80" y="645" font-family="Arial" font-size="14" fill="#333">밥</text>
+  <text x="200" y="645" font-family="Arial" font-size="14" fill="#333">2공기</text>
+  <rect x="450" y="630" width="20" height="20" fill="#28a745" rx="2"/>
+  <text x="460" y="645" font-family="Arial" font-size="12" fill="#ffffff" text-anchor="middle">✓</text>
+  <text x="480" y="645" font-family="Arial" font-size="12" fill="#28a745">보유</text>
+
+  <rect x="60" y="655" width="520" height="30" fill="#f8f9fa"/>
+  <text x="80" y="675" font-family="Arial" font-size="14" fill="#333">계란</text>
+  <text x="200" y="675" font-family="Arial" font-size="14" fill="#333">2개</text>
+  <rect x="450" y="660" width="20" height="20" fill="#28a745" rx="2"/>
+  <text x="460" y="675" font-family="Arial" font-size="12" fill="#ffffff" text-anchor="middle">✓</text>
+  <text x="480" y="675" font-family="Arial" font-size="12" fill="#28a745">보유</text>
+
+  <text x="60" y="705" font-family="Arial" font-size="16" font-weight="bold" fill="#333">양념 및 부재료</text>
+
+  <rect x="60" y="720" width="520" height="25" fill="#ffffff"/>
+  <text x="80" y="738" font-family="Arial" font-size="14" fill="#333">마늘 (다진 것)</text>
+  <text x="200" y="738" font-family="Arial" font-size="14" fill="#333">1큰술</text>
+  <rect x="450" y="725" width="20" height="15" fill="#28a745" rx="2"/>
+  <text x="460" y="737" font-family="Arial" font-size="10" fill="#ffffff" text-anchor="middle">✓</text>
+
+  <!-- Cooking Steps -->
+  <text x="640" y="580" font-family="Arial" font-size="20" font-weight="bold" fill="#333">조리 순서</text>
+
+  <rect x="640" y="600" width="520" height="400" fill="#ffffff" stroke="#dee2e6" stroke-width="1" rx="8"/>
+
+  <!-- Step 1 -->
+  <rect x="660" y="620" width="480" height="80" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="4"/>
+  <rect x="670" y="630" width="30" height="30" fill="#007bff" stroke="#0056b3" stroke-width="1" rx="4"/>
+  <text x="685" y="650" font-family="Arial" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">1</text>
+  <text x="720" y="645" font-family="Arial" font-size="14" font-weight="bold" fill="#333">김치 볶기</text>
+  <text x="720" y="665" font-family="Arial" font-size="12" fill="#6c757d">팬에 기름을 두르고 김치를 먼저 볶아줍니다.</text>
+  <text x="720" y="680" font-family="Arial" font-size="12" fill="#6c757d">김치의 신맛이 날아갈 때까지 2-3분간 볶아주세요.</text>
+
+  <!-- Step 2 -->
+  <rect x="660" y="710" width="480" height="80" fill="#ffffff" stroke="#dee2e6" stroke-width="1" rx="4"/>
+  <rect x="670" y="720" width="30" height="30" fill="#007bff" stroke="#0056b3" stroke-width="1" rx="4"/>
+  <text x="685" y="740" font-family="Arial" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">2</text>
+  <text x="720" y="735" font-family="Arial" font-size="14" font-weight="bold" fill="#333">밥 넣고 볶기</text>
+  <text x="720" y="755" font-family="Arial" font-size="12" fill="#6c757d">김치가 어느 정도 볶아지면 밥을 넣고 함께 볶아줍니다.</text>
+  <text x="720" y="770" font-family="Arial" font-size="12" fill="#6c757d">밥알이 김치와 잘 섞이도록 골고루 볶아주세요.</text>
+
+  <!-- Step 3 -->
+  <rect x="660" y="800" width="480" height="80" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="4"/>
+  <rect x="670" y="810" width="30" height="30" fill="#007bff" stroke="#0056b3" stroke-width="1" rx="4"/>
+  <text x="685" y="830" font-family="Arial" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">3</text>
+  <text x="720" y="825" font-family="Arial" font-size="14" font-weight="bold" fill="#333">계란 스크램블</text>
+  <text x="720" y="845" font-family="Arial" font-size="12" fill="#6c757d">계란을 풀어서 팬 한쪽에 부어 스크램블을 만들어줍니다.</text>
+  <text x="720" y="860" font-family="Arial" font-size="12" fill="#6c757d">계란이 익으면 볶음밥과 함께 섞어주세요.</text>
+
+  <!-- Step 4 -->
+  <rect x="660" y="890" width="480" height="80" fill="#ffffff" stroke="#dee2e6" stroke-width="1" rx="4"/>
+  <rect x="670" y="900" width="30" height="30" fill="#007bff" stroke="#0056b3" stroke-width="1" rx="4"/>
+  <text x="685" y="920" font-family="Arial" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">4</text>
+  <text x="720" y="915" font-family="Arial" font-size="14" font-weight="bold" fill="#333">마무리</text>
+  <text x="720" y="935" font-family="Arial" font-size="12" fill="#6c757d">마늘과 대파를 넣고 한 번 더 볶아 완성합니다.</text>
+  <text x="720" y="950" font-family="Arial" font-size="12" fill="#6c757d">참기름을 한 방울 떨어뜨리면 더욱 맛있어요!</text>
+
+  <!-- Cooking Tips -->
+  <text x="40" y="790" font-family="Arial" font-size="16" font-weight="bold" fill="#333">요리 팁</text>
+
+  <rect x="40" y="810" width="560" height="120" fill="#fff3cd" stroke="#ffeaa7" stroke-width="1" rx="8"/>
+  <text x="60" y="835" font-family="Arial" font-size="14" font-weight="bold" fill="#856404">💡 셰프의 팁</text>
+  <text x="60" y="855" font-family="Arial" font-size="12" fill="#856404">• 김치는 약간 신 것을 사용하면 더 맛있습니다.</text>
+  <text x="60" y="875" font-family="Arial" font-size="12" fill="#856404">• 밥이 차가우면 전자레인지에 살짝 데워서 사용하세요.</text>
+  <text x="60" y="895" font-family="Arial" font-size="12" fill="#856404">• 김 가루나 깨를 뿌려 마무리하면 더욱 고소합니다.</text>
+  <text x="60" y="915" font-family="Arial" font-size="12" fill="#856404">• 스팸이나 베이컨을 추가하면 더욱 풍부한 맛을 즐길 수 있어요!</text>
+
+  <!-- Nutrition Info -->
+  <text x="40" y="960" font-family="Arial" font-size="16" font-weight="bold" fill="#333">영양 정보 (1인분 기준)</text>
+
+  <rect x="40" y="980" width="560" height="60" fill="#ffffff" stroke="#dee2e6" stroke-width="1" rx="8"/>
+  <rect x="60" y="995" width="80" height="30" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="4"/>
+  <text x="100" y="1005" font-family="Arial" font-size="10" fill="#6c757d" text-anchor="middle">칼로리</text>
+  <text x="100" y="1020" font-family="Arial" font-size="14" fill="#333" text-anchor="middle">420kcal</text>
+
+  <rect x="160" y="995" width="80" height="30" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="4"/>
+  <text x="200" y="1005" font-family="Arial" font-size="10" fill="#6c757d" text-anchor="middle">탄수화물</text>
+  <text x="200" y="1020" font-family="Arial" font-size="14" fill="#333" text-anchor="middle">65g</text>
+
+  <rect x="260" y="995" width="80" height="30" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="4"/>
+  <text x="300" y="1005" font-family="Arial" font-size="10" fill="#6c757d" text-anchor="middle">단백질</text>
+  <text x="300" y="1020" font-family="Arial" font-size="14" fill="#333" text-anchor="middle">15g</text>
+
+  <rect x="360" y="995" width="80" height="30" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="4"/>
+  <text x="400" y="1005" font-family="Arial" font-size="10" fill="#6c757d" text-anchor="middle">지방</text>
+  <text x="400" y="1020" font-family="Arial" font-size="14" fill="#333" text-anchor="middle">12g</text>
+
+  <rect x="460" y="995" width="80" height="30" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="4"/>
+  <text x="500" y="1005" font-family="Arial" font-size="10" fill="#6c757d" text-anchor="middle">나트륨</text>
+  <text x="500" y="1020" font-family="Arial" font-size="14" fill="#333" text-anchor="middle">890mg</text>
+
+  <!-- Comments Section -->
+  <text x="640" y="1040" font-family="Arial" font-size="16" font-weight="bold" fill="#333">리뷰 및 후기 (324개)</text>
+
+  <rect x="640" y="1060" width="520" height="120" fill="#ffffff" stroke="#dee2e6" stroke-width="1" rx="8"/>
+  <text x="660" y="1085" font-family="Arial" font-size="12" fill="#333" font-weight="bold">김요리사님 ⭐⭐⭐⭐⭐</text>
+  <text x="660" y="1105" font-family="Arial" font-size="12" fill="#6c757d">정말 맛있어요! 간단한데 맛은 최고입니다.</text>
+  <text x="660" y="1125" font-family="Arial" font-size="12" fill="#333" font-weight="bold">박셰프님 ⭐⭐⭐⭐☆</text>
+  <text x="660" y="1145" font-family="Arial" font-size="12" fill="#6c757d">김치가 좀 더 익은 걸로 했으면 더 좋았을 것 같아요.</text>
+  <text x="660" y="1165" font-family="Arial" font-size="12" fill="#6c757d">그래도 맛있었습니다!</text>
+</svg>

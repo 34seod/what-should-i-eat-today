@@ -1,0 +1,73 @@
+# API 명세서
+
+## 사용자 관리 API
+
+| 엔드포인트 URL        | HTTP 메서드 | 요청 파라미터               | 요청 예시                                                                    | 응답 구조                                                                                       |
+| --------------------- | ----------- | --------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `/api/users/register` | POST        | `email`, `password`, `name` | `{"email": "user@example.com", "password": "password123", "name": "홍길동"}` | `{"id": "uuid", "email": "user@example.com", "name": "홍길동", "created_at": "timestamp"}`      |
+| `/api/users/login`    | POST        | `email`, `password`         | `{"email": "user@example.com", "password": "password123"}`                   | `{"token": "jwt_token", "user": {"id": "uuid", "email": "user@example.com", "name": "홍길동"}}` |
+| `/api/users/profile`  | GET         | `Authorization` 헤더        | `Authorization: Bearer jwt_token`                                            | `{"id": "uuid", "email": "user@example.com", "name": "홍길동", "avatar_url": "url"}`            |
+| `/api/users/profile`  | PUT         | `name`, `avatar_url`        | `{"name": "새이름", "avatar_url": "new_url"}`                                | `{"id": "uuid", "email": "user@example.com", "name": "새이름", "avatar_url": "new_url"}`        |
+| `/api/users/delete`   | DELETE      | `Authorization` 헤더        | `Authorization: Bearer jwt_token`                                            | `{"message": "계정이 삭제되었습니다"}`                                                          |
+
+## 재료 관리 API
+
+| 엔드포인트 URL             | HTTP 메서드 | 요청 파라미터                                 | 요청 예시                                                                                   | 응답 구조                                                                                                   |
+| -------------------------- | ----------- | --------------------------------------------- | ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `/api/ingredients`         | GET         | `user_id`, `category?`, `expired?`            | `GET /api/ingredients?category=야채&expired=false`                                          | `{"ingredients": [{"id": "uuid", "name": "양파", "quantity": "2개", "expiry_date": "2024-01-15"}]}`         |
+| `/api/ingredients`         | POST        | `name`, `quantity`, `expiry_date`, `barcode?` | `{"name": "양파", "quantity": "2개", "expiry_date": "2024-01-15", "barcode": "1234567890"}` | `{"id": "uuid", "name": "양파", "quantity": "2개", "expiry_date": "2024-01-15", "created_at": "timestamp"}` |
+| `/api/ingredients/{id}`    | PUT         | `name?`, `quantity?`, `expiry_date?`          | `{"quantity": "1개", "expiry_date": "2024-01-20"}`                                          | `{"id": "uuid", "name": "양파", "quantity": "1개", "expiry_date": "2024-01-20", "updated_at": "timestamp"}` |
+| `/api/ingredients/{id}`    | DELETE      | `id`                                          | `DELETE /api/ingredients/uuid`                                                              | `{"message": "재료가 삭제되었습니다"}`                                                                      |
+| `/api/ingredients/barcode` | POST        | `barcode`                                     | `{"barcode": "1234567890"}`                                                                 | `{"name": "양파", "category": "야채", "nutrition_info": {}}`                                                |
+
+## 레시피 관리 API
+
+| 엔드포인트 URL      | HTTP 메서드 | 요청 파라미터                                                                                | 요청 예시                                                                                                                                               | 응답 구조                                                                                                                                       |
+| ------------------- | ----------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/api/recipes`      | GET         | `category?`, `difficulty?`, `cook_time?`, `page?`, `limit?`                                  | `GET /api/recipes?category=한식&difficulty=쉬움&page=1&limit=10`                                                                                        | `{"recipes": [{"id": "uuid", "title": "김치찌개", "description": "설명", "cook_time": 30, "difficulty": "쉬움"}], "total": 100, "page": 1}`     |
+| `/api/recipes`      | POST        | `title`, `description`, `cook_time`, `difficulty`, `main_image_urls`, `ingredients`, `steps` | `{"title": "김치찌개", "description": "맛있는 김치찌개", "cook_time": 30, "difficulty": "쉬움", "ingredients": [{"name": "김치", "quantity": "200g"}]}` | `{"id": "uuid", "title": "김치찌개", "user_id": "uuid", "created_at": "timestamp"}`                                                             |
+| `/api/recipes/{id}` | GET         | `id`                                                                                         | `GET /api/recipes/uuid`                                                                                                                                 | `{"id": "uuid", "title": "김치찌개", "description": "설명", "steps": [{"step_number": 1, "title": "재료 준비", "description": "김치를 썬다"}]}` |
+| `/api/recipes/{id}` | PUT         | `title?`, `description?`, `cook_time?`, `difficulty?`, `main_image_urls?`                    | `{"title": "새로운 김치찌개", "cook_time": 25}`                                                                                                         | `{"id": "uuid", "title": "새로운 김치찌개", "cook_time": 25, "updated_at": "timestamp"}`                                                        |
+| `/api/recipes/{id}` | DELETE      | `id`                                                                                         | `DELETE /api/recipes/uuid`                                                                                                                              | `{"message": "레시피가 삭제되었습니다"}`                                                                                                        |
+
+## 레시피 단계 API
+
+| 엔드포인트 URL                  | HTTP 메서드 | 요청 파라미터                                                                        | 요청 예시                                                                                                          | 응답 구조                                                                                                             |
+| ------------------------------- | ----------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `/api/recipe-steps/{recipe_id}` | GET         | `recipe_id`                                                                          | `GET /api/recipe-steps/uuid`                                                                                       | `{"steps": [{"id": "uuid", "step_number": 1, "title": "재료 준비", "description": "김치를 썬다", "image_urls": []}]}` |
+| `/api/recipe-steps`             | POST        | `recipe_id`, `step_number`, `title`, `description`, `image_urls?`, `estimated_time?` | `{"recipe_id": "uuid", "step_number": 1, "title": "재료 준비", "description": "김치를 썬다", "estimated_time": 5}` | `{"id": "uuid", "recipe_id": "uuid", "step_number": 1, "created_at": "timestamp"}`                                    |
+| `/api/recipe-steps/{id}`        | PUT         | `title?`, `description?`, `image_urls?`, `estimated_time?`                           | `{"title": "재료 손질", "estimated_time": 7}`                                                                      | `{"id": "uuid", "title": "재료 손질", "estimated_time": 7, "updated_at": "timestamp"}`                                |
+| `/api/recipe-steps/{id}`        | DELETE      | `id`                                                                                 | `DELETE /api/recipe-steps/uuid`                                                                                    | `{"message": "레시피 단계가 삭제되었습니다"}`                                                                         |
+
+## 검색 및 추천 API
+
+| 엔드포인트 URL                      | HTTP 메서드 | 요청 파라미터                                           | 요청 예시                                                                   | 응답 구조                                                                                                                         |
+| ----------------------------------- | ----------- | ------------------------------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `/api/search`                       | GET         | `q`, `type?`, `category?`, `cook_time?`, `difficulty?`  | `GET /api/search?q=김치&type=recipe&cook_time=30`                           | `{"results": [{"id": "uuid", "title": "김치찌개", "type": "recipe", "score": 0.95}], "total": 5}`                                 |
+| `/api/recommendations`              | GET         | `user_id`, `ingredients?`, `max_missing?`, `cook_time?` | `GET /api/recommendations?ingredients=김치,양파&max_missing=1&cook_time=30` | `{"recommendations": [{"recipe": {"id": "uuid", "title": "김치찌개"}, "match_score": 0.9, "missing_ingredients": ["돼지고기"]}]}` |
+| `/api/recommendations/personalized` | GET         | `user_id`, `limit?`                                     | `GET /api/recommendations/personalized?limit=10`                            | `{"recommendations": [{"id": "uuid", "title": "김치찌개", "reason": "자주 만드는 한식 요리"}], "total": 10}`                      |
+
+## 평점 및 리뷰 API
+
+| 엔드포인트 URL             | HTTP 메서드 | 요청 파라미터                                | 요청 예시                                                                               | 응답 구조                                                                                                                       |
+| -------------------------- | ----------- | -------------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `/api/reviews/{recipe_id}` | GET         | `recipe_id`, `page?`, `limit?`               | `GET /api/reviews/uuid?page=1&limit=10`                                                 | `{"reviews": [{"id": "uuid", "user_name": "홍길동", "rating": 5, "comment": "맛있어요", "images": []}], "average_rating": 4.5}` |
+| `/api/reviews`             | POST        | `recipe_id`, `rating`, `comment?`, `images?` | `{"recipe_id": "uuid", "rating": 5, "comment": "맛있어요", "images": ["url1", "url2"]}` | `{"id": "uuid", "recipe_id": "uuid", "rating": 5, "created_at": "timestamp"}`                                                   |
+| `/api/reviews/{id}`        | PUT         | `rating?`, `comment?`, `images?`             | `{"rating": 4, "comment": "수정된 후기"}`                                               | `{"id": "uuid", "rating": 4, "comment": "수정된 후기", "updated_at": "timestamp"}`                                              |
+| `/api/reviews/{id}`        | DELETE      | `id`                                         | `DELETE /api/reviews/uuid`                                                              | `{"message": "리뷰가 삭제되었습니다"}`                                                                                          |
+
+## 북마크 API
+
+| 엔드포인트 URL        | HTTP 메서드 | 요청 파라미터                | 요청 예시                            | 응답 구조                                                                                                   |
+| --------------------- | ----------- | ---------------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `/api/bookmarks`      | GET         | `user_id`, `page?`, `limit?` | `GET /api/bookmarks?page=1&limit=10` | `{"bookmarks": [{"id": "uuid", "recipe": {"id": "uuid", "title": "김치찌개"}, "created_at": "timestamp"}]}` |
+| `/api/bookmarks`      | POST        | `recipe_id`                  | `{"recipe_id": "uuid"}`              | `{"id": "uuid", "recipe_id": "uuid", "created_at": "timestamp"}`                                            |
+| `/api/bookmarks/{id}` | DELETE      | `id`                         | `DELETE /api/bookmarks/uuid`         | `{"message": "북마크가 삭제되었습니다"}`                                                                    |
+
+## 외부 API 연동
+
+| 엔드포인트 URL                        | HTTP 메서드 | 요청 파라미터               | 요청 예시                                                        | 응답 구조                                                                                            |
+| ------------------------------------- | ----------- | --------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `/api/coupang/search`                 | GET         | `ingredient_name`, `limit?` | `GET /api/coupang/search?ingredient_name=양파&limit=5`           | `{"products": [{"name": "신선한 양파", "price": 3000, "url": "coupang_url", "image": "image_url"}]}` |
+| `/api/auth/oauth/{provider}`          | GET         | `provider`                  | `GET /api/auth/oauth/google`                                     | `{"auth_url": "oauth_provider_url"}`                                                                 |
+| `/api/auth/oauth/{provider}/callback` | GET         | `code`, `state`             | `GET /api/auth/oauth/google/callback?code=auth_code&state=state` | `{"token": "jwt_token", "user": {"id": "uuid", "email": "user@example.com"}}`                        |

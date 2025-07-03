@@ -1,0 +1,515 @@
+---
+description: tech stack
+globs:
+alwaysApply: false
+---
+
+# 기술 스택 (Tech Stack)
+
+## 전체 아키텍처
+
+```mermaid
+graph TB
+    A["사용자"] --> B["Next.js Frontend<br/>(Vercel)"]
+    B --> C["Supabase Backend"]
+    C --> D["PostgreSQL Database"]
+    C --> E["Supabase Storage"]
+    C --> F["Supabase Auth<br/>(OAuth)"]
+
+    G["External APIs"] --> B
+    G --> H["바코드 스캔 API"]
+    G --> I["쿠팡 파트너스 API"]
+    G --> J["소셜 로그인<br/>(Google, Kakao)"]
+
+    B --> K["카메라 API<br/>(바코드 스캔)"]
+```
+
+## Frontend 기술 스택
+
+### Next.js 15 (App Router) + TypeScript
+
+참고: [prd.mdc](mdc:prd.mdc)
+
+#### 선택 이유
+
+- **서버 사이드 렌더링**: SEO 최적화 및 초기 로딩 성능 향상
+- **App Router**: 최신 Next.js 아키텍처로 파일 기반 라우팅
+- **이미지 최적화**: Next.js Image 컴포넌트로 성능 최적화
+- **API Routes**: 서버리스 함수로 간단한 API 구현 가능
+- **TypeScript 필수**: 모든 코드를 TypeScript로 작성하여 타입 안전성 보장
+
+#### 주요 기능 활용
+
+- **동적 라우팅**: 레시피 상세 페이지 (`/recipe/[id]`)
+- **SSR/SSG**: 레시피 목록 페이지 사전 렌더링
+- **클라이언트 컴포넌트**: 바코드 스캔, 실시간 상호작용
+- **서버 컴포넌트**: 데이터 페칭 최적화
+
+#### TypeScript 설정
+
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "es6"],
+    "allowJs": false, // JavaScript 파일 사용 금지
+    "skipLibCheck": true,
+    "strict": true, // 엄격 모드 활성화
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/types/*": ["./src/types/*"],
+      "@/hooks/*": ["./src/hooks/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", "**/*.js", "**/*.jsx"] // JS 파일 제외
+}
+```
+
+### UI/UX 라이브러리
+
+#### Tailwind CSS
+
+- **유틸리티 기반**: 빠른 스타일링 및 일관된 디자인
+- **반응형 디자인**: 모바일 우선 디자인 구현
+- **다크 모드**: 사용자 선호도에 따른 테마 변경
+
+#### shadcn/ui + Radix UI
+
+- **접근성**: WAI-ARIA 표준 준수 컴포넌트
+- **커스터마이징**: Tailwind와 완벽 호환
+- **타입 안전성**: TypeScript 완벽 지원
+
+#### 추가 라이브러리
+
+- **Framer Motion**: 애니메이션 및 인터랙션
+- **React Hook Form**: 폼 관리 및 유효성 검사
+- **Zod**: 스키마 유효성 검사
+- **React Query**: 서버 상태 관리
+- **Zustand**: 클라이언트 상태 관리
+
+## Backend 기술 스택
+
+### Supabase
+
+참고: [prd.mdc](mdc:prd.mdc)
+
+#### 핵심 서비스
+
+##### 1. Database (PostgreSQL)
+
+```sql
+-- 주요 테이블 구조 예시
+users (id, email, name, avatar_url, created_at)
+ingredients (id, user_id, name, quantity, expiry_date, barcode)
+recipes (id, user_id, title, description, cook_time, difficulty)
+recipe_steps (id, recipe_id, step_number, title, description, image_urls, estimated_time)
+recipe_ingredients (recipe_id, ingredient_name, quantity)
+reviews (id, recipe_id, user_id, rating, comment, images)
+bookmarks (id, user_id, recipe_id, created_at)
+```
+
+##### 2. Authentication (OAuth)
+
+- **Google OAuth**: 가장 널리 사용되는 소셜 로그인
+- **Kakao OAuth**: 한국 사용자 대상 주요 플랫폼
+- **이메일 인증**: 기본 회원가입 옵션
+
+##### 3. Storage
+
+- **레시피 이미지**: 요리 과정 및 완성 사진
+- **프로필 이미지**: 사용자 아바타
+- **리뷰 이미지**: 사용자 요리 결과물
+- **자동 이미지 압축**: 성능 최적화
+
+#### 이미지 저장 전략
+
+##### 버킷 구조 (WebP + JPEG 다중 포맷)
+
+```
+supabase-storage/
+├── avatars/                    # 프로필 이미지
+│   └── {user_id}/
+│       ├── avatar.webp        # WebP 버전
+│       └── avatar.jpg         # JPEG 폴백
+├── recipes/                    # 레시피 이미지
+│   └── {recipe_id}/
+│       ├── main-{timestamp}.webp     # 대표 이미지 WebP
+│       ├── main-{timestamp}.jpg      # 대표 이미지 JPEG
+│       ├── step-1-{timestamp}.webp   # 조리 과정 WebP
+│       ├── step-1-{timestamp}.jpg    # 조리 과정 JPEG
+│       └── ...
+├── reviews/                    # 리뷰 이미지
+│   └── {review_id}/
+│       ├── result-1.webp      # 완성 요리 WebP
+│       ├── result-1.jpg       # 완성 요리 JPEG
+│       └── ...
+└── ingredients/                # 재료 이미지 (바코드 스캔)
+    └── barcodes/
+        ├── {barcode}.webp     # WebP 버전
+        └── {barcode}.jpg      # JPEG 폴백
+```
+
+##### 이미지 처리 파이프라인
+
+1. WebP 변환 및 압축 유틸리티
+2. 다중 포맷 압축 (WebP + Fallback)
+3. Supabase Storage 업로드 (다중 포맷)
+4. 데이터베이스에 URL 저장 (다중 포맷 지원)
+
+##### RLS (Row Level Security) 정책
+
+```sql
+-- 레시피 이미지 접근 정책
+CREATE POLICY "Public recipe images are viewable by everyone"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'recipe-images');
+
+-- 사용자는 자신의 레시피 이미지만 업로드/수정 가능
+CREATE POLICY "Users can upload their own recipe images"
+ON storage.objects FOR INSERT
+WITH CHECK (
+  bucket_id = 'recipe-images'
+  AND auth.uid()::text = (storage.foldername(name))[1]
+);
+
+-- 프로필 이미지는 본인만 접근
+CREATE POLICY "Users can manage their own avatars"
+ON storage.objects FOR ALL
+USING (
+  bucket_id = 'avatars'
+  AND auth.uid()::text = (storage.foldername(name))[1]
+);
+```
+
+##### 이미지 최적화 및 표시 (WebP 우선)
+
+#### Row Level Security (RLS)
+
+```sql
+-- 사용자별 데이터 접근 제어
+CREATE POLICY "Users can only see their own ingredients"
+ON ingredients FOR ALL
+USING (auth.uid() = user_id);
+
+CREATE POLICY "Public recipes are viewable by everyone"
+ON recipes FOR SELECT
+USING (is_public = true);
+```
+
+## 배포 및 인프라
+
+### Vercel
+
+참고: [prd.mdc](mdc:prd.mdc)
+
+#### 배포 설정
+
+- **자동 배포**: GitHub 연동을 통한 CI/CD
+- **프리뷰 배포**: PR별 미리보기 환경
+- **환경 변수**: 개발/스테이징/프로덕션 분리
+- **Edge Functions**: 지역별 최적화된 서버리스 함수
+
+#### 성능 최적화
+
+- **CDN**: 전 세계 엣지 캐싱
+- **이미지 최적화**: WebP, AVIF 자동 변환
+- **번들 최적화**: Tree-shaking 및 코드 분할
+- **캐싱 전략**: ISR(Incremental Static Regeneration)
+
+## 외부 API 연동
+
+### 바코드 스캔
+
+- **QuaggaJS**: 클라이언트 사이드 바코드 스캔
+- **Camera API**: 모바일 카메라 접근
+- **식품 데이터베이스**: 바코드 → 제품 정보 매핑
+
+### 쿠팡 파트너스
+
+- **Product API**: 상품 검색 및 정보 조회
+- **Link Generation**: 제휴 링크 자동 생성
+- **Price Tracking**: 가격 변동 모니터링
+
+## 개발 환경 설정
+
+### 필수 도구
+
+```json
+{
+  "node": ">=18.0.0",
+  "pnpm": ">=8.0.0",
+  "typescript": "^5.0.0"
+}
+```
+
+### 환경 변수
+
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# OAuth
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+KAKAO_CLIENT_ID=
+KAKAO_CLIENT_SECRET=
+
+# External APIs
+COUPANG_ACCESS_KEY=
+COUPANG_SECRET_KEY=
+BARCODE_API_KEY=
+```
+
+### 프로젝트 구조 (TypeScript 전용)
+
+```
+src/
+├── app/                    # Next.js App Router (모든 파일 .tsx)
+│   ├── (auth)/            # 인증 관련 페이지
+│   │   ├── login/
+│   │   │   └── page.tsx   # 로그인 페이지
+│   │   └── signup/
+│   │       └── page.tsx   # 회원가입 페이지
+│   ├── recipe/            # 레시피 페이지
+│   │   ├── [id]/
+│   │   │   └── page.tsx   # 레시피 상세
+│   │   └── page.tsx       # 레시피 목록
+│   ├── my-fridge/         # 냉장고 관리
+│   │   └── page.tsx
+│   ├── api/               # API Routes (모든 파일 .ts)
+│   │   ├── recipes/
+│   │   │   └── route.ts   # 레시피 API
+│   │   └── ingredients/
+│   │       └── route.ts   # 재료 API
+│   ├── layout.tsx         # 루트 레이아웃
+│   ├── page.tsx          # 홈페이지
+│   ├── loading.tsx       # 로딩 UI
+│   ├── error.tsx         # 에러 UI
+│   └── not-found.tsx     # 404 페이지
+├── components/            # 재사용 컴포넌트 (모든 파일 .tsx)
+│   ├── ui/               # shadcn/ui 컴포넌트
+│   │   ├── button.tsx
+│   │   ├── input.tsx
+│   │   └── modal.tsx
+│   ├── forms/            # 폼 컴포넌트
+│   │   ├── recipe-form.tsx
+│   │   └── ingredient-form.tsx
+│   ├── layouts/          # 레이아웃 컴포넌트
+│   │   ├── header.tsx
+│   │   └── sidebar.tsx
+│   └── recipe/           # 레시피 관련 컴포넌트
+│       ├── recipe-card.tsx
+│       └── recipe-list.tsx
+├── lib/                  # 유틸리티 및 설정 (모든 파일 .ts)
+│   ├── supabase/         # Supabase 클라이언트
+│   │   ├── client.ts
+│   │   └── server.ts
+│   ├── auth/             # 인증 로직
+│   │   └── config.ts
+│   ├── utils/            # 공통 유틸리티
+│   │   ├── cn.ts         # 클래스명 유틸리티
+│   │   └── validation.ts # 유효성 검사
+│   └── constants/        # 상수 정의
+│       └── index.ts
+├── hooks/                # 커스텀 React 훅 (모든 파일 .ts)
+│   ├── use-auth.ts
+│   ├── use-recipes.ts
+│   └── use-ingredients.ts
+├── types/                # TypeScript 타입 정의 (모든 파일 .ts)
+│   ├── database.ts       # Supabase 스키마 타입
+│   ├── recipe.ts         # 레시피 관련 타입
+│   ├── ingredient.ts     # 재료 관련 타입
+│   └── auth.ts           # 인증 관련 타입
+├── stores/               # Zustand 스토어 (모든 파일 .ts)
+│   ├── fridge-store.ts
+│   ├── auth-store.ts
+│   └── ui-store.ts
+└── styles/               # 전역 스타일
+    └── globals.css
+```
+
+#### 필수 TypeScript 파일 확장자
+
+- **페이지 컴포넌트**: `.tsx` (JSX 포함)
+- **API Routes**: `.ts` (서버 사이드)
+- **유틸리티/훅**: `.ts` (로직만)
+- **타입 정의**: `.ts` (타입 전용)
+- **컴포넌트**: `.tsx` (React 컴포넌트)
+
+#### JavaScript 파일 금지
+
+```json
+// .eslintrc.json
+{
+  "extends": ["next/core-web-vitals", "@typescript-eslint/recommended"],
+  "rules": {
+    "no-undef": "error",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/explicit-function-return-type": "warn"
+  }
+}
+```
+
+## 보안 및 성능
+
+### 보안 조치
+
+- **HTTPS 강제**: Vercel 자동 SSL 인증서
+- **환경 변수 보호**: 서버 사이드에서만 접근
+- **CORS 설정**: 허용된 도메인만 API 접근
+- **SQL Injection 방지**: Parameterized Query 사용
+
+### 성능 목표
+
+참고: [prd.mdc](mdc:prd.mdc)
+
+- **First Contentful Paint**: < 1.5초
+- **Largest Contentful Paint**: < 2.5초
+- **Time to Interactive**: < 3초
+- **Cumulative Layout Shift**: < 0.1
+
+## 모니터링 및 분석
+
+### 에러 추적
+
+- **Sentry**: 실시간 에러 모니터링
+- **Vercel Analytics**: 성능 지표 추적
+
+### 사용자 분석
+
+- **Google Analytics**: 사용자 행동 분석
+- **Supabase Analytics**: 데이터베이스 쿼리 분석
+
+## 개발 가이드라인
+
+#### TypeScript 코딩 규칙
+
+```typescript
+// ✅ 올바른 예시 - 모든 타입 명시
+interface Recipe {
+  id: string;
+  title: string;
+  description: string;
+  cookTime: number;
+  difficulty: "easy" | "medium" | "hard";
+  ingredients: Ingredient[];
+  steps: RecipeStep[];
+  mainImageUrls: {
+    webp: string;
+    jpeg: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface RecipeStep {
+  id: string;
+  recipeId: string;
+  stepNumber: number;
+  title: string;
+  description: string;
+  imageUrls?: {
+    webp: string;
+    jpeg: string;
+  };
+  estimatedTime?: number; // 분 단위
+}
+
+// API Route 타입 정의
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+): Promise<Response> {
+  // 구현
+}
+
+// React 컴포넌트 Props 타입
+interface RecipeCardProps {
+  recipe: Recipe;
+  onBookmark?: (recipeId: string) => void;
+  className?: string;
+}
+
+export const RecipeCard: React.FC<RecipeCardProps> = ({
+  recipe,
+  onBookmark,
+  className = "",
+}) => {
+  // 구현
+};
+
+// ❌ 금지된 패턴
+const data: any = {}; // any 타입 금지
+function getData() {} // 리턴 타입 생략 금지
+```
+
+#### 필수 개발 도구
+
+```json
+// package.json
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "type-check": "tsc --noEmit",
+    "lint": "next lint --fix",
+    "lint:strict": "next lint --max-warnings 0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.35.0",
+    "@typescript-eslint/parser": "^8.35.0",
+    "typescript": "^5.0.0"
+  }
+}
+```
+
+### 코드 품질
+
+- **ESLint + TypeScript**: 엄격한 타입 검사 및 코드 스타일
+- **Prettier**: 자동 코드 포맷팅
+- **Husky**: Git 커밋 전 타입 체크 및 린트 검사
+- **TypeScript Strict Mode**: 최고 수준의 타입 안전성
+
+### 테스트 전략
+
+- **Jest + Testing Library**: 단위 테스트
+- **Playwright**: E2E 테스트
+- **Storybook**: 컴포넌트 문서화
+
+#### 상태 관리 아키텍처
+
+##### React Query
+
+- 서버 데이터 캐싱
+- API 요청/응답 관리
+- 백그라운드 업데이트
+- 에러 및 로딩 상태
+
+##### Zustand
+
+- 클라이언트 상태
+- UI 상태 (모달, 필터)
+- 사용자 설정
+- 임시 데이터

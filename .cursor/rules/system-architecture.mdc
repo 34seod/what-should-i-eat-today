@@ -1,0 +1,621 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+
+# 시스템 아키텍처 (System Architecture)
+
+참고: [prd.mdc](mdc:prd.mdc), [tech-stack.mdc](mdc:tech-stack.mdc)
+
+## 아키텍처 구성요소
+
+### 전체 시스템 아키텍처
+
+```mermaid
+graph TB
+    %% 사용자 계층
+    subgraph "사용자 인터페이스"
+        A[사용자]
+        B[모바일 브라우저]
+        C[데스크톱 브라우저]
+    end
+
+    %% 프레젠테이션 계층
+    subgraph "프레젠테이션 계층"
+        D[Next.js 15 Frontend]
+        E[App Router]
+        F[Server Components]
+        G[Client Components]
+    end
+
+    %% 애플리케이션 계층
+    subgraph "애플리케이션 계층"
+        H[API Routes]
+        I[Server Actions]
+        J[Middleware]
+        K[Edge Functions]
+    end
+
+    %% 비즈니스 로직 계층
+    subgraph "비즈니스 로직 계층"
+        L[Supabase Backend]
+        M[PostgreSQL Database]
+        N[Authentication Service]
+        O[Storage Service]
+        P[Real-time Subscriptions]
+    end
+
+    %% 외부 서비스 계층
+    subgraph "외부 서비스"
+        Q[쿠팡 파트너스 API]
+        R[바코드 스캔 API]
+        S[소셜 로그인 OAuth]
+        T[Camera API]
+    end
+
+    %% 인프라 계층
+    subgraph "인프라 및 배포"
+        U[Vercel CDN]
+        V[Edge Network]
+        W[Monitoring & Analytics]
+        X[Error Tracking]
+    end
+
+    %% 연결 관계
+    A --> B
+    A --> C
+    B --> D
+    C --> D
+    D --> E
+    E --> F
+    E --> G
+    D --> H
+    D --> I
+    D --> J
+    H --> L
+    I --> L
+    L --> M
+    L --> N
+    L --> O
+    L --> P
+    G --> Q
+    G --> R
+    N --> S
+    G --> T
+    D --> U
+    U --> V
+    D --> W
+    D --> X
+```
+
+## 계층 구조
+
+### 세부 계층 구조
+
+```mermaid
+graph TD
+    %% 클라이언트 계층
+    subgraph "클라이언트 계층"
+        A1[사용자 인터페이스]
+        A2[상태 관리]
+        A3[라우팅]
+        A4[컴포넌트]
+    end
+
+    %% 프레젠테이션 계층
+    subgraph "프레젠테이션 계층"
+        B1[Pages & Layouts]
+        B2[UI 컴포넌트]
+        B3[폼 관리]
+        B4[에러 바운더리]
+    end
+
+    %% 서비스 계층
+    subgraph "서비스 계층"
+        C1[API 클라이언트]
+        C2[데이터 페칭]
+        C3[캐시 관리]
+        C4[인증 서비스]
+    end
+
+    %% 데이터 계층
+    subgraph "데이터 계층"
+        D1[데이터베이스]
+        D2[파일 저장소]
+        D3[세션 스토어]
+        D4[실시간 데이터]
+    end
+
+    %% 외부 통합 계층
+    subgraph "외부 통합 계층"
+        E1[외부 API]
+        E2[OAuth 제공자]
+        E3[결제 시스템]
+        E4[푸시 알림]
+    end
+
+    A1 --> B1
+    A2 --> B2
+    A3 --> B3
+    A4 --> B4
+    B1 --> C1
+    B2 --> C2
+    B3 --> C3
+    B4 --> C4
+    C1 --> D1
+    C2 --> D2
+    C3 --> D3
+    C4 --> D4
+    C1 --> E1
+    C4 --> E2
+    C1 --> E3
+    C1 --> E4
+```
+
+## 모듈화 및 컴포넌트
+
+### 프론트엔드 모듈 구조
+
+```mermaid
+graph TB
+    %% 페이지 레벨
+    subgraph "페이지 컴포넌트"
+        PA[홈페이지]
+        PB[레시피 목록]
+        PC[레시피 상세]
+        PD[냉장고 관리]
+        PE[사용자 프로필]
+    end
+
+    %% 레이아웃 컴포넌트
+    subgraph "레이아웃 컴포넌트"
+        LA[루트 레이아웃]
+        LB[헤더]
+        LC[사이드바]
+        LD[푸터]
+        LE[네비게이션]
+    end
+
+    %% 기능별 컴포넌트
+    subgraph "기능 컴포넌트"
+        FA[레시피 카드]
+        FB[재료 리스트]
+        FC[바코드 스캐너]
+        FD[검색 필터]
+        FE[평점 시스템]
+    end
+
+    %% UI 컴포넌트
+    subgraph "UI 컴포넌트"
+        UA[버튼]
+        UB[입력 필드]
+        UC[모달]
+        UD[드롭다운]
+        UE[로딩 스피너]
+    end
+
+    %% 훅 및 유틸리티
+    subgraph "훅 & 유틸리티"
+        HA[useAuth]
+        HB[useRecipes]
+        HC[useIngredients]
+        HD[useCamera]
+        HE[유효성 검사]
+    end
+
+    PA --> LA
+    PB --> LB
+    PC --> LC
+    PD --> LD
+    PE --> LE
+    FA --> UA
+    FB --> UB
+    FC --> UC
+    FD --> UD
+    FE --> UE
+    FA --> HA
+    FB --> HB
+    FC --> HC
+    FD --> HD
+    FE --> HE
+```
+
+### 백엔드 서비스 모듈
+
+```mermaid
+graph TB
+    %% 데이터베이스 스키마
+    subgraph "데이터베이스 스키마"
+        DB1[users]
+        DB2[recipes]
+        DB3[recipe_steps]
+        DB4[ingredients]
+        DB5[reviews]
+        DB6[bookmarks]
+    end
+
+    %% 인증 서비스
+    subgraph "인증 서비스"
+        AUTH1[OAuth 통합]
+        AUTH2[세션 관리]
+        AUTH3[권한 제어]
+        AUTH4[RLS 정책]
+    end
+
+    %% 스토리지 서비스
+    subgraph "스토리지 서비스"
+        ST1[이미지 업로드]
+        ST2[이미지 최적화]
+        ST3[파일 관리]
+        ST4[CDN 연동]
+    end
+
+    %% API 서비스
+    subgraph "API 서비스"
+        API1[레시피 API]
+        API2[레시피 단계 API]
+        API3[재료 API]
+        API4[검색 API]
+        API5[추천 API]
+    end
+
+    DB1 --> AUTH1
+    DB2 --> API1
+    DB3 --> API2
+    DB4 --> API3
+    DB5 --> API4
+    DB6 --> API5
+    AUTH2 --> AUTH3
+    AUTH3 --> AUTH4
+    ST1 --> ST2
+    ST2 --> ST3
+    ST3 --> ST4
+```
+
+## 데이터 플로우
+
+### 사용자 요청 플로우
+
+```mermaid
+sequenceDiagram
+    participant U as 사용자
+    participant F as Frontend (Next.js)
+    participant V as Vercel Edge
+    participant S as Supabase
+    participant DB as PostgreSQL
+    participant ST as Storage
+    participant EXT as 외부 API
+
+    %% 페이지 로드 플로우
+    U->>F: 페이지 요청
+    F->>V: SSR/SSG 요청
+    V->>S: 데이터 페칭
+    S->>DB: 쿼리 실행
+    DB-->>S: 데이터 반환
+    S-->>V: 응답 데이터
+    V-->>F: 렌더링된 페이지
+    F-->>U: 페이지 표시
+
+    %% 인증 플로우
+    U->>F: 로그인 요청
+    F->>S: 인증 요청
+    S->>EXT: OAuth 검증
+    EXT-->>S: 인증 결과
+    S-->>F: 세션 토큰
+    F-->>U: 로그인 완료
+
+    %% 데이터 업데이트 플로우
+    U->>F: 데이터 수정
+    F->>S: API 요청
+    S->>DB: 데이터 업데이트
+    S->>ST: 파일 업로드
+    DB-->>S: 업데이트 결과
+    ST-->>S: 업로드 결과
+    S-->>F: 응답
+    F-->>U: 결과 표시
+```
+
+### 레시피 추천 플로우
+
+```mermaid
+graph LR
+    %% 입력 데이터
+    A[사용자 냉장고 재료] --> B[재료 분석]
+    C[사용자 선호도] --> B
+    D[조리 시간 필터] --> B
+
+    %% 처리 단계
+    B --> E[레시피 매칭 알고리즘]
+    E --> F[가용성 점수 계산]
+    F --> G[개인화 점수 적용]
+
+    %% 결과
+    G --> H[추천 레시피 목록]
+    H --> I[부족한 재료 표시]
+    I --> J[구매 링크 생성]
+
+    %% 피드백 루프
+    J --> K[사용자 반응 수집]
+    K --> L[추천 모델 개선]
+    L --> E
+```
+
+## API 및 인터페이스
+
+### REST API 구조
+
+```mermaid
+graph TB
+    %% API Gateway
+    subgraph "API Gateway (Next.js)"
+        AG[API Routes]
+        MW[Middleware]
+        AUTH[인증 검증]
+        RATE[Rate Limiting]
+    end
+
+    %% 핵심 API 엔드포인트
+    subgraph "핵심 API"
+        API1["/api/recipes"]
+        API2["/api/recipe-steps"]
+        API3["/api/ingredients"]
+        API4["/api/users"]
+        API5["/api/search"]
+        API6["/api/recommendations"]
+    end
+
+    %% 외부 API 연동
+    subgraph "외부 API 연동"
+        EXT1["/api/barcode"]
+        EXT2["/api/coupang"]
+        EXT3["/api/auth/oauth"]
+    end
+
+    %% 실시간 API
+    subgraph "실시간 API"
+        RT1[WebSocket 연결]
+        RT2[Server-Sent Events]
+        RT3[실시간 알림]
+    end
+
+    AG --> MW
+    MW --> AUTH
+    AUTH --> RATE
+    RATE --> API1
+    RATE --> API2
+    RATE --> API3
+    RATE --> API4
+    RATE --> API5
+    RATE --> API6
+    AUTH --> EXT1
+    AUTH --> EXT2
+    AUTH --> EXT3
+    API4 --> RT1
+    API6 --> RT2
+    RT1 --> RT3
+```
+
+### GraphQL 스키마 (Supabase)
+
+```mermaid
+erDiagram
+    users {
+        uuid id PK
+        string email
+        string name
+        string avatar_url
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    recipes {
+        uuid id PK
+        uuid user_id FK
+        string title
+        text description
+        integer cook_time
+        enum difficulty
+        jsonb main_image_urls
+        boolean is_public
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    recipe_steps {
+        uuid id PK
+        uuid recipe_id FK
+        integer step_number
+        string title
+        text description
+        jsonb image_urls
+        integer estimated_time
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ingredients {
+        uuid id PK
+        uuid user_id FK
+        string name
+        string quantity
+        date expiry_date
+        string barcode
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    recipe_ingredients {
+        uuid recipe_id FK
+        string ingredient_name
+        string quantity
+        boolean is_optional
+    }
+
+    reviews {
+        uuid id PK
+        uuid recipe_id FK
+        uuid user_id FK
+        integer rating
+        text comment
+        jsonb images
+        timestamp created_at
+    }
+
+    bookmarks {
+        uuid id PK
+        uuid user_id FK
+        uuid recipe_id FK
+        timestamp created_at
+    }
+
+    users ||--o{ recipes : "작성"
+    users ||--o{ ingredients : "소유"
+    users ||--o{ reviews : "작성"
+    users ||--o{ bookmarks : "저장"
+    recipes ||--o{ recipe_steps : "포함"
+    recipes ||--o{ recipe_ingredients : "포함"
+    recipes ||--o{ reviews : "받음"
+    recipes ||--o{ bookmarks : "북마크됨"
+```
+
+## 시스템 외부 환경과의 관계
+
+### 외부 서비스 통합 아키텍처
+
+```mermaid
+graph TB
+    %% 내부 시스템
+    subgraph "내부 시스템"
+        APP[레시피 앱]
+        API[API Gateway]
+        DB[데이터베이스]
+    end
+
+    %% 인증 서비스
+    subgraph "인증 서비스"
+        GOOGLE[Google OAuth]
+        KAKAO[Kakao OAuth]
+    end
+
+    %% 상거래 서비스
+    subgraph "상거래 서비스"
+        COUPANG[쿠팡 파트너스]
+        PAYMENT[결제 시스템]
+    end
+
+    %% 외부 데이터 서비스
+    subgraph "외부 데이터"
+        BARCODE[바코드 API]
+        FOOD_DB[식품 데이터베이스]
+        NUTRITION[영양 정보 API]
+    end
+
+    %% 소셜 미디어
+    subgraph "소셜 미디어"
+        FACEBOOK[Facebook]
+        INSTAGRAM[Instagram]
+        KAKAOTALK[KakaoTalk]
+    end
+
+    %% 모니터링 서비스
+    subgraph "모니터링 & 분석"
+        SENTRY[Sentry]
+        ANALYTICS[Google Analytics]
+        VERCEL_ANALYTICS[Vercel Analytics]
+    end
+
+    %% 인프라 서비스
+    subgraph "인프라"
+        VERCEL[Vercel CDN]
+        SUPABASE[Supabase]
+        CLOUDFLARE[Cloudflare]
+    end
+
+    %% 연결 관계
+    APP --> API
+    API --> DB
+
+    API --> GOOGLE
+    API --> KAKAO
+
+    API --> COUPANG
+    API --> PAYMENT
+
+    API --> BARCODE
+    API --> FOOD_DB
+    API --> NUTRITION
+
+    APP --> FACEBOOK
+    APP --> INSTAGRAM
+    APP --> KAKAOTALK
+
+    APP --> SENTRY
+    APP --> ANALYTICS
+    APP --> VERCEL_ANALYTICS
+
+    APP --> VERCEL
+    API --> SUPABASE
+    VERCEL --> CLOUDFLARE
+```
+
+### 배포 및 운영 환경
+
+```mermaid
+graph TB
+    %% 개발 환경
+    subgraph "개발 환경"
+        DEV_LOCAL[로컬 개발]
+        DEV_PREVIEW[Vercel Preview]
+        DEV_STAGING[스테이징]
+    end
+
+    %% 프로덕션 환경
+    subgraph "프로덕션 환경"
+        PROD_VERCEL[Vercel Production]
+        PROD_SUPABASE[Supabase Production]
+        PROD_CDN[Global CDN]
+    end
+
+    %% CI/CD 파이프라인
+    subgraph "CI/CD"
+        GITHUB[GitHub Repository]
+        ACTIONS[GitHub Actions]
+        DEPLOY[자동 배포]
+    end
+
+    %% 모니터링
+    subgraph "모니터링"
+        UPTIME[Uptime Monitoring]
+        PERFORMANCE[성능 모니터링]
+        ERROR_TRACKING[에러 추적]
+        LOGS[로그 수집]
+    end
+
+    %% 보안
+    subgraph "보안"
+        SSL[SSL/TLS 인증서]
+        WAF[Web Application Firewall]
+        DDoS[DDoS 보호]
+        BACKUP[백업 시스템]
+    end
+
+    DEV_LOCAL --> GITHUB
+    GITHUB --> ACTIONS
+    ACTIONS --> DEV_PREVIEW
+    DEV_PREVIEW --> DEV_STAGING
+    DEV_STAGING --> DEPLOY
+    DEPLOY --> PROD_VERCEL
+    PROD_VERCEL --> PROD_SUPABASE
+    PROD_VERCEL --> PROD_CDN
+
+    PROD_VERCEL --> UPTIME
+    PROD_VERCEL --> PERFORMANCE
+    PROD_VERCEL --> ERROR_TRACKING
+    PROD_SUPABASE --> LOGS
+
+    PROD_CDN --> SSL
+    PROD_VERCEL --> WAF
+    PROD_CDN --> DDoS
+    PROD_SUPABASE --> BACKUP
+```
